@@ -1,6 +1,9 @@
-function Home(){
-    return(
+import Nav from "../components/Navbar";
+
+function Home() {
+    return (
         <div>
+            <Nav />
             Home Page
         </div>
     )

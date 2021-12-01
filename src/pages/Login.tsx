@@ -11,22 +11,49 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Copyright from '../components/Copyright';
+import Nav from '../components/Navbar';
 
-function Login(){
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        // eslint-disable-next-line no-console
-        console.log({
-          email: data.get('email'),
-          password: data.get('password'),
+const auth = getAuth();
+
+function Login() {
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const email = String(data.get('email'));
+    const password = String(data.get('password'));
+
+    if (!email || !password) {
+      console.log("Please check credentials and try again...!");
+      console.log(email, password);
+    } else {
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed in 
+          const user = userCredential.user;
+          console.log(user);
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log({
+            errorCode: errorCode,
+            errorMessage: errorMessage
+          });
         });
-      };
+    }
 
 
-    return(
-        <Container component="main" maxWidth="xs">
+  };
+
+
+  return (
+    <>
+      <Nav />
+      <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
           sx={{
@@ -91,7 +118,8 @@ function Login(){
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
-    )
+    </>
+  )
 }
 
 export default Login;
